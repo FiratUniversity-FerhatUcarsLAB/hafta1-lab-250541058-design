@@ -3,7 +3,7 @@ AD-SOYAD:Burçin AYYILDIZ
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
 
-SUDOKU KARŞILAŞMASI YAKLAŞIMI
+SUDOKU KARŞILAŞMASI YAKLAŞIMI:
 
 FONKSIYON SUDOKU_ÇÖZ (TAHTA)
 
