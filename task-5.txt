@@ -1,4 +1,77 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No:250541058
+AD-SOYAD:Burçin AYYILDIZ
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+İDEAL HAVE DEMLEME:
+
+FONKSIYON IDEAL_KAHVE_DEMLE (DEMLEME_YONTEMI, KAHVE_MIKTARI, SU_MIKTARI, KAVURMA_DUZEYI)
+
+    // 1. HAZIRLIK: Koşullu Ayar Belirleme
+    
+    // KOŞULLU DURUM 1: Su Sıcaklığı Ayarı
+    EĞER KAVURMA_DUZEYI = 'HAFIF' İSE
+        HEDEF_SU_SICAKLIGI = 96 SANTIGRAT_DERECE
+    BAŞKA EĞER KAVURMA_DUZEYI = 'ORTA' İSE
+        HEDEF_SU_SICAKLIGI = 93 SANTIGRAT_DERECE
+    BAŞKA // Koyu Kavruma
+        HEDEF_SU_SICAKLIGI = 88 SANTIGRAT_DERECE
+    SON_EĞER
+    
+    // KOŞULLU DURUM 2: Öğütme Kalınlığı Ayarı
+    EĞER DEMLEME_YONTEMI = 'FRENCH_PRESS' İSE
+        OGUTME_AYARI = 'KALIN'
+    BAŞKA EĞER DEMLEME_YONTEMI = 'FILTRE' İSE
+        OGUTME_AYARI = 'ORTA'
+    BAŞKA EĞER DEMLEME_YONTEMI = 'ESPRESSO' İSE
+        OGUTME_AYARI = 'INCE'
+    BAŞKA
+        YAZDIR ("HATA: Geçersiz demleme yöntemi.")
+        GERİ_DÖN HATA
+    SON_EĞER
+    
+    // 2. ÖĞÜTME VE ISITMA
+    OGUT (KAHVE_CEKIRDEKLERI, OGUTME_AYARI, KAHVE_MIKTARI)
+    SU_ISIT (HEDEF_SU_SICAKLIGI, SU_MIKTARI)
+
+    // 3. DEMLEME VE ÖN ISLATMA (Bloom)
+    
+    // KOŞULLU DURUM 3: Yönteme özgü demleme adımı
+    EĞER DEMLEME_YONTEMI = 'FILTRE' VEYA DEMLEME_YONTEMI = 'V60' İSE
+        
+        // TEKRAR EDEN İŞLEM (1): Ön Islatma (Bloom)
+        SU_DOK (KAHVE_MIKTARI * 2, HEDEF_SU_SICAKLIGI) // Kahvenin 2 katı su
+        BEKLE (30 SANIYE)
+        
+        // TEKRAR EDEN İŞLEM (2): Kademeli Dökme
+        KALAN_SU = SU_MIKTARI - (KAHVE_MIKTARI * 2)
+        WHILE KALAN_SU > 0 DO
+            DOKME_MIKTARI = MIN (KALAN_SU, 100 ML)
+            SU_DOK (DOKME_MIKTARI, HEDEF_SU_SICAKLIGI)
+            KALAN_SU = KALAN_SU - DOKME_MIKTARI
+            BEKLE (20 SANIYE)
+        SON_WHILE
+
+        HEDEF_TOPLAM_DEMLEME_SÜRESİ = 3.5 DAKIKA
+
+    BAŞKA EĞER DEMLEME_YONTEMI = 'FRENCH_PRESS' İSE
+        
+        SU_DOK (SU_MIKTARI, HEDEF_SU_SICAKLIGI)
+        KARISTIR (1 KEZ)
+        HEDEF_TOPLAM_DEMLEME_SÜRESİ = 4 DAKIKA
+        BEKLE (HEDEF_TOPLAM_DEMLEME_SÜRESİ)
+        PRESLE ()
+        
+    SON_EĞER
+    
+    // 4. SON KONTROL
+    GERCEKLEŞEN_SURE = AL_DEMLEME_SÜRESİ()
+    
+    // KOŞULLU DURUM 4: Demleme Süresi Kontrolü
+    EĞER ABS (GERCEKLEŞEN_SURE - HEDEF_TOPLAM_DEMLEME_SÜRESİ) > 30 SANIYE İSE
+        YAZDIR ("UYARI: Demleme süresi hedeften sapmıştır. Öğütme ayarınızı kontrol edin.")
+    SON_EĞER
+
+    SUN (MUKEMMEL_KAHVE, İDEAL_SERVİS_SICAKLIGI)
+    
+SON_FONKSIYON
