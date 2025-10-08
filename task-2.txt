@@ -1,4 +1,68 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No: 250541058
+AD-SOYAD:Burçin AYYILDIZ
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+SUDOKU KARŞILAŞMASI YAKLAŞIMI
+
+FONKSIYON SUDOKU_ÇÖZ (TAHTA)
+
+    // A. Boş Hücreyi Bulma (Temel Durum Kontrolü)
+    (BOŞ_HÜCRE_BULUNDU, SATIR, SUTUN) = BUL_İLK_BOŞ_HÜCRE (TAHTA)
+    
+    // KOŞULLU DURUM 1: Tahtada hiç boş hücre kalmadıysa, çözüm tamamlanmıştır.
+    EĞER BOŞ_HÜCRE_BULUNDU = YANLIŞ İSE
+        GERİ_DÖN DOĞRU 
+    SON_EĞER
+
+    // B. Deneme ve Geri İzleme (Özyinelemeli Tekrarlama)
+    SAYI = 1'DEN 9'A KADAR TEKRAR ET
+        
+        // KOŞULLU DURUM 2: Denenecek sayı kurala uygun mu?
+        EĞER GEÇERLİ_MI (TAHTA, SATIR, SUTUN, SAYI) İSE
+            
+            // 1. DENE: Sayıyı hücreye yerleştir.
+            TAHTA[SATIR][SUTUN] = SAYI
+            
+            // 2. ÖZYİNELE: Çözüme yeni durumla devam et.
+            EĞER SUDOKU_ÇÖZ (TAHTA) İSE
+                GERİ_DÖN DOĞRU // Çözüm bulundu, zincirleme başarı.
+            SON_EĞER
+            
+            // 3. GERİ İZLEME (Backtrack): Eğer yukarıdaki deneme başarısız olursa, 
+            // tahtayı temizle ve bir sonraki SAYI'yı dene.
+            TAHTA[SATIR][SUTUN] = 0 
+            
+        SON_EĞER
+        
+    SON_TEKRAR
+
+    // C. Başarısızlık
+    GERİ_DÖN YANLIŞ // 1'den 9'a kadar hiçbir sayı işe yaramadı. Önceki adımlardan birinde hata var.
+
+SON_FONKSIYON
+
+FONKSIYON GEÇERLİ_MI (TAHTA, SATIR, SUTUN, SAYI)
+
+    // TEKRAR EDEN İŞLEM: Satır ve Sütun Kontrolü
+    I = 0'DAN 8'E KADAR TEKRAR ET
+        EĞER TAHTA[SATIR][I] = SAYI VEYA TAHTA[I][SUTUN] = SAYI İSE
+            GERİ_DÖN YANLIŞ
+        SON_EĞER
+    SON_TEKRAR
+
+    // TEKRAR EDEN İŞLEM: 3x3 Kutu Kontrolü
+    BASLANGIC_SATIR = SATIR - (SATIR MOD 3)
+    BASLANGIC_SUTUN = SUTUN - (SUTUN MOD 3)
+
+    I = BASLANGIC_SATIR'DAN BASLANGIC_SATIR + 2'YE KADAR TEKRAR ET
+        J = BASLANGIC_SUTUN'DAN BASLANGIC_SUTUN + 2'YE KADAR TEKRAR ET
+            EĞER TAHTA[I][J] = SAYI İSE
+                GERİ_DÖN YANLIŞ
+            SON_EĞER
+        SON_TEKRAR
+    SON_TEKRAR
+
+    GERİ_DÖN DOĞRU // Tüm kontrollerden geçti.
+
+SON_FONKSIYON
