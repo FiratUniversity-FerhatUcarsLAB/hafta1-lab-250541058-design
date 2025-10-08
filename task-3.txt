@@ -1,4 +1,69 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No: 250541058
+AD-SOYAD:Burçin AYYILDIZ
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+MÜZİK KOLEKSİYONUNU DÜZENLEME
+
+FONKSIYON MÜZIK_KOLEKSIYONU_DUZENLE (ANA_DIZIN, DUZENLENMIS_DIZIN, FORMAT_TERCIHI)
+
+    LOG_DOSYASI = YENI_LOG_DOSYASI_OLUSTUR()
+    
+    // 1. HAZIRLIK ve TANI: Tüm dosyaları bul ve listele
+    TUM_DOSYALAR_LISTESI = AL_TUM_MÜZIK_DOSYALARI (ANA_DIZIN)
+
+    // 2. ANA DÖNGÜ: Her bir müzik dosyası üzerinde tekrar eden işlem
+    HER BIR DOSYA (D) İÇİN TUM_DOSYALAR_LISTESI'nde TEKRAR ET
+        
+        // A. METADATA (ETİKET) OKUMA
+        METADATA = OKU_ETIKETLER (D) // ID3 Tag, vb.
+        HATA_VAR = YANLIŞ
+
+        // B. KOŞULLU DURUM: Zorunlu Etiket Kontrolü
+        EĞER METADATA.SANATCI = BOS VEYA METADATA.SARKİ_ADİ = BOS İSE
+            YAZDIR (LOG_DOSYASI, D.ADI + " : Kritik etiket eksik.")
+            METADATA = DENE_DOSYA_ADINDAN_CIKAR (D.ADI) // Dosya adını parçalamayı dene
+            
+            // KOŞULLU DURUM: Dosya adından da bilgi çıkarılamazsa
+            EĞER METADATA.SANATCI = BOS İSE 
+                HATA_VAR = DOĞRU
+            SON_EĞER
+        SON_EĞER
+
+        // C. KOŞULLU DURUM: Kalite Kontrolü (İsteğe bağlı)
+        EĞER D.BITRATE < 192 KBPS İSE
+            YAZDIR (LOG_DOSYASI, D.ADI + " : Düşük Kalite (Bitrate).")
+            // Düşük kaliteli dosyaları ayrı bir klasöre taşı
+            TAŞI_DOSYA (D, DUZENLENMIS_DIZIN + "/Dusuk_Kalite/") 
+            DEVAM_ET // Bu dosyanın etiketlenmesini atla
+        SON_EĞER
+
+        // D. ETİKET GÜNCELLEME ve TEMİZLEME
+        EĞER HATA_VAR = YANLIŞ İSE
+            METADATA = TEMİZLE_ETİKET_VERİSİ (METADATA) // Gereksiz karakterleri/etiketleri temizle
+            YAZ_ETİKETLER (D, METADATA) // Temizlenmiş etiketleri dosyaya kaydet
+            
+            // E. YENİ DOSYA ADI OLUŞTURMA
+            YENI_AD = OLUŞTUR_DOSYA_ADI (METADATA, FORMAT_TERCIHI)
+
+            // F. KOŞULLU DURUM: YENİ ADI kullanarak Hiyerarşik Taşıma
+            HEDEF_YOL = DUZENLENMIS_DIZIN + "/" + METADATA.SANATCI + "/" + METADATA.ALBÜM + "/" + YENI_AD + D.UZANTISI
+            
+            EĞER DOSYA_VAR_MI (HEDEF_YOL) İSE
+                // KOŞULLU DURUM: Çakışma varsa
+                YAZDIR (LOG_DOSYASI, YENI_AD + " : Çakışma. Atlanıyor veya Yeniden Adlandırılıyor.")
+                YENI_AD = YENI_AD + "_KOPYA" // Veya atla
+            SON_EĞER
+            
+            TAŞI_DOSYA (D, HEDEF_YOL) // Dosyayı yeni, organize edilmiş konuma taşı
+        
+        BAŞKA // Hata varsa (Sanatçı/Şarkı Adı bulunamadı)
+            TAŞI_DOSYA (D, DUZENLENMIS_DIZIN + "/Elle_Müdahale_Gerekenler/")
+        SON_EĞER
+
+    SON_TEKRAR
+
+    YAZDIR ("Düzenleme tamamlandı. Log dosyasını kontrol edin.")
+    GERİ_DÖN LOG_DOSYASI
+    
+SON_FONKSIYON
