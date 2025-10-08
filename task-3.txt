@@ -3,7 +3,7 @@ AD-SOYAD:Burçin AYYILDIZ
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
 
-MÜZİK KOLEKSİYONUNU DÜZENLEME
+MÜZİK KOLEKSİYONUNU DÜZENLEME:
 
 FONKSIYON MÜZIK_KOLEKSIYONU_DUZENLE (ANA_DIZIN, DUZENLENMIS_DIZIN, FORMAT_TERCIHI)
 
