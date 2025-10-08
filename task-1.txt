@@ -3,6 +3,8 @@ AD-SOYAD: Burçin AYYILDIZ
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
 
+SINAV ÇALIŞMA PLANI ALGORİTMASI
+
 FONKSIYON CALISMA_PLANI_OLUSTUR (SINAV_TARIHI, KONULAR_LISTESI, TAHMINI_SURELER, GUNLUK_CALISMA_SAATI)
 
     // 1. HAZIRLIK ve DEĞERLENDİRME
