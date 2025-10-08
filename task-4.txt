@@ -1,4 +1,62 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No:250541058
+AD-SOYAD:Burçin AYYILDIZ
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+OTOBÜS ROTASI ŞEMASI
+
+
+FONKSIYON EN_VERIMLI_ROTA_HESAPLA (DURAKLAR, ROTA_AGI, BASLANGIC_DURAGI)
+
+    // 1. HAZIRLIK: Başlangıç değerlerini tanımla
+    EN_KISA_SURELER = YENI_HARITA() // Duraklara ulaşım süresi
+    ONCEKI_DURAKLAR = YENI_HARITA() // Rotayı kaydetmek için
+    ZIYARET_EDILMEYENLER = YENI_KUME (DURAKLAR) // Henüz kesinleşmemiş duraklar kümesi
+
+    // Başlangıç değerlerini ayarla
+    HER BIR DURAK (D) İÇİN DURAKLAR'da TEKRAR ET
+        EN_KISA_SURELER[D] = SONSZUZ_SURE // Tüm duraklara ulaşım süresi sonsuz kabul edilir
+        ONCEKI_DURAKLAR[D] = TANIMSIZ
+    SON_TEKRAR
+    
+    EN_KISA_SURELER[BASLANGIC_DURAGI] = 0 // Başlangıç durağına süre 0'dır
+
+    // 2. ANA DÖNGÜ: Tüm durakları ziyaret edene kadar tekrar eden işlem
+    WHILE ZIYARET_EDILMEYENLER BOŞ DEĞİL DO
+
+        // A. En Kısa Süreli Durağı Bul
+        MEVCUT_DURAK = ZIYARET_EDILMEYENLER İÇİNDEN EN_KISA_SURELER'de en küçük değere sahip olan durak
+
+        // KOŞULLU DURUM: Mevcut durak sonsuz ise, rota kesilmiştir.
+        EĞER EN_KISA_SURELER[MEVCUT_DURAK] = SONSZUZ_SURE İSE
+            KIR_DÖNGÜYÜ // Kalan duraklara ulaşılamıyor
+        SON_EĞER
+        
+        // B. Durağı Ziyaret Edilmiş Olarak İşaretle
+        KALDIR (ZIYARET_EDILMEYENLER, MEVCUT_DURAK)
+
+        // C. TEKRAR EDEN İŞLEM: Komşu Durakları Değerlendir
+        HER BIR KOMŞU_DURAK (K) İÇİN ROTA_AGI[MEVCUT_DURAK]'da TEKRAR ET
+            
+            GECIS_SURESI = ROTA_AGI[MEVCUT_DURAK][K].MALİYET
+            
+            // KOŞULLU DURUM: Trafik ve hava durumu koşulu (Maliyetin dinamik olarak artırılması)
+            EĞER K.YOL_DURUMU = 'YOĞUN_TRAFİK' İSE
+                GECIS_SURESI = GECIS_SURESI * 1.5 // %50 süre artışı
+            SON_EĞER
+            
+            YENI_TOPLAM_SURE = EN_KISA_SURELER[MEVCUT_DURAK] + GECIS_SURESI
+            
+            // KOŞULLU DURUM: Daha kısa bir yol bulundu mu? (Rahatlatma Adımı)
+            EĞER YENI_TOPLAM_SURE < EN_KISA_SURELER[K] İSE
+                EN_KISA_SURELER[K] = YENI_TOPLAM_SURE // Süreyi güncelle
+                ONCEKI_DURAKLAR[K] = MEVCUT_DURAK // Rotayı güncelle
+            SON_EĞER
+            
+        SON_TEKRAR
+
+    SON_WHILE
+
+    GERİ_DÖN EN_KISA_SURELER, ONCEKI_DURAKLAR
+
+SON_FONKSIYON
