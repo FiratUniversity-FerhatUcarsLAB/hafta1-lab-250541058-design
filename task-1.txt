@@ -1,4 +1,107 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No: 250541058
+AD-SOYAD: Burçin AYYILDIZ
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+FONKSIYON CALISMA_PLANI_OLUSTUR (SINAV_TARIHI, KONULAR_LISTESI, TAHMINI_SURELER, GUNLUK_CALISMA_SAATI)
+
+    // 1. HAZIRLIK ve DEĞERLENDİRME
+    TOPLAM_GEREKEN_SURE = TOPLA (TAHMINI_SURELER)
+    KALAN_GUN_SAYISI = HESAPLA_GUN_FARKI (BUGUN, SINAV_TARIHI)
+    
+    // Güvenlik Marjı ve Tekrar Süresi Ekleme
+    TEKRAR_SURESI_YUZDESI = 0.20 // Toplam sürenin %20'si tekrar için
+    TEKRAR_SURESI = TOPLAM_GEREKEN_SURE * TEKRAR_SURESI_YUZDESI
+    TOPLAM_PLANLANACAK_SURE = TOPLAM_GEREKEN_SURE + TEKRAR_SURESI
+
+    // 2. KONTROL: Planlama Mümkün mü?
+    MAKSIMUM_CALISMA_SURESI = KALAN_GUN_SAYISI * GUNLUK_CALISMA_SAATI
+    
+    EĞER TOPLAM_PLANLANACAK_SURE > MAKSIMUM_CALISMA_SURESI İSE
+        YAZDIR ("UYARI: Kalan süre, planlanan tüm konuları bitirmek için yetersiz. Günlük süreyi artırın veya konu kapsamını azaltın.")
+        DUR
+    SON_EĞER
+
+    // 3. ÇALIŞMA PROGRAMINI OLUŞTURMA
+    CALISMA_PLANI = BOS_LISTE()
+    GECICI_TARIH = BUGUN
+    KONU_SIRASI = SIRALA (KONULAR_LISTESI, ONCELIK_DUZEYINE_GORE) // Zor veya acil konular öne alınır
+
+    HER BIR GUN (i=1'den KALAN_GUN_SAYISI'na) İÇİN TEKRAR ET
+        GUNUN_PLANI = YENI_GUNLUK_PLAN()
+        KALAN_CALISMA_HAKKI = GUNLUK_CALISMA_SAATI
+
+        HER BIR KONU (K) İÇİN KONU_SIRASI'nda TEKRAR ET
+            EĞER K.DURUMU = 'BITMEDI' VE KALAN_CALISMA_HAKKI > 0 İSE
+                // Günlük çalışma süresi ve konunun kalan süresi karşılaştırılır
+                PLANLANAN_SURE = MIN (K.KALAN_SURE, KALAN_CALISMA_HAKKI)
+                
+                EKLE_PLANA (GUNUN_PLANI, K.ADI, PLANLANAN_SURE)
+                K.KALAN_SURE = K.KALAN_SURE - PLANLANAN_SURE
+                KALAN_CALISMA_HAKKI = KALAN_CALISMA_HAKKI - PLANLANAN_SURE
+
+                EĞER K.KALAN_SURE <= 0 İSE
+                    K.DURUMU = 'TAMAMLANDI'
+                    EKLE_PLANA (GUNUN_PLANI, K.ADI, "TEKRAR ET") // Konu bitince tekrar zamanı eklenir
+                SON_EĞER
+            SON_EĞER
+        SON_TEKRAR
+
+        EKLE_CALISMA_PLANI (CALISMA_PLANI, GECICI_TARIH, GUNUN_PLANI)
+        GECICI_TARIH = GECICI_TARIH + 1_GUN
+
+        // Son haftada sadece tekrar ve deneme sınavı planla
+        EĞER GECICI_TARIH > SINAV_TARIHI - 7_GUN İSE
+            EKLE_PLANA (GUNUN_PLANI, "GENEL_TEKRAR", GUNLUK_CALISMA_SAATI * 0.5)
+            EKLE_PLANA (GUNUN_PLANI, "DENEME_SINAVI", GUNLUK_CALISMA_SAATI * 0.5)
+        SON_EĞER
+
+    SON_TEKRAR
+
+    GERI_DÖN CALISMA_PLANI
+SON_FONKSIYON
+
+---
+
+## Plan Uygulama ve Güncelleme Algoritması (Pseudocode)
+
+```pseudocode
+FONKSIYON PLANI_UYGULA_VE_GUNCELLE (CALISMA_PLANI, MOTIVASYON_SEVIYESI)
+
+    // DÖNGÜ: Çalışma Sürecini Günlük Takip Etme
+    WHILE BUGUN < SINAV_TARIHI DO
+        
+        AKTIF_GUNLUK_PLAN = AL_GUNLUK_PLAN (CALISMA_PLANI, BUGUN)
+
+        HER BIR GÖREV (G) İÇİN AKTIF_GUNLUK_PLAN'da TEKRAR ET
+            
+            BASLAT (G.ADI, G.PLANLANAN_SURE)
+            GERCEKLESEN_SURE = KULLANICIDAN_AL_GERCEKLESTIRILEN_SURE()
+            
+            // Koşullu Durum: Çalışma Verimliliğini Değerlendirme
+            EĞER GERCEKLESEN_SURE < G.PLANLANAN_SURE VEYA MOTIVASYON_SEVIYESI < 5 İSE
+                
+                YENI_MOTIVASYON_SEVIYESI = YÜKSELT_MOTIVASYON() // Örneğin 15 dakikalık mola
+                
+                EĞER G.ADI İÇİNDEKİLER = "TEKRAR" İSE
+                    YAZDIR ("Hafif tekrarı daha sonraki bir güne kaydır.")
+                    KAYDIR_GOREV (G, BUGUN + 1_GUN) // Tekrarı yarına ertele
+                BAŞKA_EĞER GERCEKLESEN_SURE < G.PLANLANAN_SURE İSE
+                    KALAN_IS = G.PLANLANAN_SURE - GERCEKLESEN_SURE
+                    EKLE_GOREV_ILK_BOS_GUNE (KALAN_IS, G.ADI) // Kalan işi planın başına ekle
+                SON_BAŞKA_EĞER
+                
+            SON_EĞER
+            
+        SON_TEKRAR
+        
+        // GÜNCELLEME: İlerleme Raporu Oluşturma
+        GUNCELLE_ILERLEME_RAPORU (KONULAR_LISTESI)
+        
+        BEKLE_BIR_SONRAKI_GUNE() // Sistem bir sonraki güne geçer
+        
+    SON_WHILE
+    
+    YAZDIR ("SINAV GÜNÜ: BOL ŞANS!")
+    
+SON_FONKSIYON
