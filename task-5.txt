@@ -3,7 +3,7 @@ AD-SOYAD:Burçin AYYILDIZ
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
 
-İDEAL HAVE DEMLEME:
+İDEAL KAHVE DEMLEME:
 
 FONKSIYON IDEAL_KAHVE_DEMLE (DEMLEME_YONTEMI, KAHVE_MIKTARI, SU_MIKTARI, KAVURMA_DUZEYI)
 
@@ -75,3 +75,8 @@ FONKSIYON IDEAL_KAHVE_DEMLE (DEMLEME_YONTEMI, KAHVE_MIKTARI, SU_MIKTARI, KAVURMA
     SUN (MUKEMMEL_KAHVE, İDEAL_SERVİS_SICAKLIGI)
     
 SON_FONKSIYON
+
+LLM KONUŞMA GEÇMİŞİ:
+İdeal Kahve demleme konusunda  icin adım adım algoritma gelistirmek istiyorum. Kosullu
+
+durumları ve tekrar eden islemleri de iceren detaylı bir pseudocode  yazmama yardım eder misin?”
