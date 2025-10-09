@@ -67,3 +67,8 @@ FONKSIYON MÜZIK_KOLEKSIYONU_DUZENLE (ANA_DIZIN, DUZENLENMIS_DIZIN, FORMAT_TERCI
     GERİ_DÖN LOG_DOSYASI
     
 SON_FONKSIYON
+
+LLM KONUŞMA GEÇMİŞİ:
+Müzik koelksiyonu düzenleme konusunda  icin adım adım algoritma gelistirmek istiyorum. Kosullu
+
+durumları ve tekrar eden islemleri de iceren detaylı bir pseudocode  yazmama yardım eder misin?”
