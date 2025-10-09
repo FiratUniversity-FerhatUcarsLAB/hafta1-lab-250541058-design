@@ -107,3 +107,9 @@ FONKSIYON PLANI_UYGULA_VE_GUNCELLE (CALISMA_PLANI, MOTIVASYON_SEVIYESI)
     YAZDIR ("SINAV GÜNÜ: BOL ŞANS!")
     
 SON_FONKSIYON
+
+
+LLM KONUŞMA GEÇMİŞİ:
+Sınav çalışma planı konusunda  icin adım adım algoritma gelistirmek istiyorum. Kosullu
+
+durumları ve tekrar eden islemleri de iceren detaylı bir pseudocode  yazmama yardım eder misin?”
